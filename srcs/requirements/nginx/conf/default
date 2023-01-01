@@ -1,6 +1,4 @@
 server {
-	server_name sunbchoi.42.fr;
-
 	listen 443 ssl;
 	listen [::]:443 ssl;
 
@@ -13,11 +11,9 @@ server {
 
 	root /var/www/html/wordpress;
 	index index.php index.html index.htm;
+	server_name {$DOMAIN_NAME};
 	
-	location / {
-		try_files $uri $uri/ /index.php$is_args$args;
-	}
-
+	
 	location ~ \.php$ {
 		include /etc/nginx/fastcgi_params;
 		fastcgi_split_path_info ^(.+\.php)(/.+)$;
@@ -35,7 +31,7 @@ server {
 	}
 
 	location /goaccess/ {
-		proxy_pass http:s//goaccess:7000/;
+		proxy_pass https:s//goaccess:7000/;
 		proxy_http_version 1.1;
 		proxy_set_header Upgrade $http_upgrade;
 		proxy_set_header Connection 'upgrade';
@@ -54,4 +50,9 @@ server {
 		proxy_set_header Upgrade $http_upgrade;
 		proxy_set_header Connection 'upgrade';
 	}
+
+	location / {
+		try_files $uri $uri/ /index.php$is_args$args;
+	}
+
 }
